@@ -17,23 +17,22 @@ project:
   # Source files must be in ./src and you must list each source file separately, one per line.
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
-    - "project.v"
+    - "tt_um_godofstrategy_arm32.v"
     - "core.v"
     - "decoder.v"
     - "register_file.v"
     - "alu.v"
     - "barrel_shifter.v"
     - "memory_controller.v"
-    - "debug_controller.v"
     - "spi_debug_slave.v"
 
 # The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
 # This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
 pinout:
   # Inputs
-  ui[0]: ""
-  ui[1]: ""
-  ui[2]: ""
+  ui[0]: "SPI_SCK"
+  ui[1]: "SPI_MOSI"
+  ui[2]: "SPI_CS_N"
   ui[3]: ""
   ui[4]: ""
   ui[5]: ""
@@ -41,7 +40,7 @@ pinout:
   ui[7]: ""
 
   # Outputs
-  uo[0]: ""
+  uo[0]: "SPI_MISO"
   uo[1]: ""
   uo[2]: ""
   uo[3]: ""
