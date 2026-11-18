@@ -1,3 +1,4 @@
+
 # Makefile
 # See https://docs.cocotb.org/en/stable/quickstart.html for more info
 
@@ -6,14 +7,13 @@ SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = project.v \
+PROJECT_SOURCES = tt_um_godofstrategy_arm32.v \
                   core.v \
                   decoder.v \
                   register_file.v \
                   alu.v \
                   barrel_shifter.v \
                   memory_controller.v \
-                  debug_controller.v \
                   spi_debug_slave.v
 
 ifneq ($(GATES),yes)
