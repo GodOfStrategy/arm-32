@@ -4,9 +4,10 @@
 
 # defaults
 SIM ?= icarus
+PYTHON_BIN = python
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
-SRC_DIR = $(PWD)/../src
+SRC_DIR = ../src
 PROJECT_SOURCES = tt_um_godofstrategy_arm32.v \
                   core.v \
                   decoder.v \
