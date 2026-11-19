@@ -57,7 +57,7 @@ always @(*) begin
     sram_addr = 8'b0;
     sram_wdata = 8'b0;
 
-    if (state == READ) begin
+    if (state == READ||state==READ_WAIT) begin
         sram_en = 1'b1;
         sram_addr = base_addr + byte_index;
     end
