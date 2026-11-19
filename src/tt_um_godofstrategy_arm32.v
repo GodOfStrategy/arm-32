@@ -16,17 +16,21 @@ assign uo_out = {7'b0,miso};
 assign uio_out = 8'b0;
 assign uio_oe = 8'b0;
 
-reg [7:0] ram [0:255];
 wire sram_en, sram_we;
 wire [7:0] sram_addr, sram_wdata;
 wire [7:0] sram_rdata;
 
-assign sram_rdata = ram[sram_addr];
-
-always @(posedge clk) begin
-    if (sram_en && sram_we)
-        ram[sram_addr] <= sram_wdata;
-end
+gf180mcu_fd_ip_sram_sram256x8m8wm1 ram0(
+    .CLK(clk)
+    .CEN(~sram_en),
+    .GWEN(~sram_we),
+    .WEN(sram_we?8'h00:8'hff),
+    .A(sram_addr),
+    .D(sram_wdata),
+    .Q(sram_rdata),
+    .VDD(vdd),
+    .VSS(vss)
+);
 
 wire cpu_req, cpu_instr, cpu_we, cpu_byte;
 wire [31:0] cpu_addr, cpu_wdata, cpu_rdata;
