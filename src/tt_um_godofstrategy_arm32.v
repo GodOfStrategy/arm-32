@@ -16,20 +16,38 @@ assign uo_out = {7'b0,miso};
 assign uio_out = 8'b0;
 assign uio_oe = 8'b0;
 
-wire sram_en, sram_we;
-wire [7:0] sram_addr, sram_wdata;
+wire mem_sram_en, mem_sram_we;
+wire [7:0] mem_sram_addr, mem_sram_wdata;
 wire [7:0] sram_rdata;
 
-gf180mcu_fd_ip_sram_sram256x8m8wm1 ram0(
-    .CLK(clk)
-    .CEN(~sram_en),
-    .GWEN(~sram_we),
-    .WEN(sram_we?8'h00:8'hff),
-    .A(sram_addr),
-    .D(sram_wdata),
-    .Q(sram_rdata),
-    .VDD(vdd),
-    .VSS(vss)
+reg sram_cen_n, sram_gwen_n;
+reg [7:0] sram_wen_n;
+reg [7:0] sram_address, sram_write_data;
+
+always @(negedge clk) begin
+    if (rst) begin
+        sram_cen_n <= 1'b1;
+        sram_gwen_n <= 1'b1;
+        sram_wen_n <= 8'hff;
+        sram_address <= 0;
+        sram_write_data <= 0;
+    end else begin
+        sram_cen_n <= ~mem_sram_en;
+        sram_gwen_n <= ~mem_sram_we;
+        sram_wen_n <= mem_sram_we ? 8'h00 : 8'hff;
+        sram_address <= mem_sram_addr;
+        sram_write_data <= mem_sram_wdata;
+    end
+end
+
+gf180mcu_ocd_ip_sram__sram256x8m8wm1 ram0 (
+    .CLK(clk),
+    .CEN(sram_cen_n),
+    .GWEN(sram_gwen_n),
+    .WEN(sram_wen_n),
+    .A(sram_address),
+    .D(sram_write_data),
+    .Q(sram_rdata)
 );
 
 wire cpu_req, cpu_instr, cpu_we, cpu_byte;
