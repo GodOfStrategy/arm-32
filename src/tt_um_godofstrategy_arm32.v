@@ -110,10 +110,10 @@ memory_controller mem(
     .loader_addr(loader_addr),
     .loader_data(loader_data),
     .loader_ready(loader_ready),
-    .sram_en(sram_en),
-    .sram_we(sram_we),
-    .sram_addr(sram_addr),
-    .sram_wdata(sram_wdata),
+    .sram_en(mem_sram_en),
+    .sram_we(mem_sram_we),
+    .sram_addr(mem_sram_addr),
+    .sram_wdata(mem_sram_wdata),
     .sram_rdata(sram_rdata)
 );
 
