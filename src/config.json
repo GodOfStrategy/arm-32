@@ -72,7 +72,7 @@
   "PDN_VOFFSET": 4.0,
   "PDN_VSPACING": 2.0,
   "PDN_MACRO_CONNECTIONS": [
-    "ram0 VDD VSS VDD! VSS!"
+    "ram0 VDD! VSS! VDD VSS"
   ],
   "//": "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
   "//": "!!! DO NOT CHANGE ANYTHING BELOW THIS POINT !!!",
