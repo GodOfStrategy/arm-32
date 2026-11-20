@@ -19,7 +19,7 @@ assign uio_oe = 8'b0;
 wire sram_en, sram_we;
 wire [7:0] sram_addr, sram_wdata;
 wire [7:0] sram_rdata;
-
+wire vdd,vss;
 gf180mcu_ocd_ip_sram__sram256x8m8wm1 ram0(
     .CLK(clk),
     .CEN(~sram_en),
