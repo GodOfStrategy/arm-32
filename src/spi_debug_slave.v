@@ -14,19 +14,22 @@ module spi_debug_slave (
     input wire [31:0] resp_data
 );
 
+    reg sck_meta, sck_sync, sck_prev;
+    reg cs_meta, cs_sync, cs_prev;
+    reg mosi_meta, mosi_sync;
+
     reg [87:0] rx_shift;
     reg [6:0] bit_count;
-    reg req_toggle;
-    reg req_sync1;
-    reg req_sync2;
-    reg req_seen;
     reg [5:0] tx_bit_count;
 
     wire [47:0] tx_packet;
+    wire [87:0] rx_next;
+
     assign tx_packet = {8'h5A, resp_sts, resp_data};
+    assign rx_next = {rx_shift[86:0], mosi_sync};
 
     assign spi_miso =
-        (!spi_cs_n && tx_bit_count < 6'd48) ?
+        (!cs_sync && tx_bit_count < 6'd48) ?
         tx_packet[47-tx_bit_count] : 1'b0;
 
     function [7:0] packet_checksum;
@@ -41,57 +44,68 @@ module spi_debug_slave (
         end
     endfunction
 
-    always @(posedge spi_sck or posedge spi_cs_n) begin
-        if (spi_cs_n || rst) begin
-            rx_shift <= 88'b0;
-            bit_count <= 7'b0;
-        end else if (bit_count < 7'd88) begin
-            rx_shift <= {rx_shift[86:0], spi_mosi};
-            bit_count <= bit_count + 1'b1;
-        end
-    end
-
-    always @(posedge spi_cs_n or posedge rst) begin
-        if (rst) begin
-            cmd <= 8'b0;
-            cmd_addr <= 32'b0;
-            cmd_data <= 32'b0;
-            req_toggle <= 1'b0;
-        end else if (
-            bit_count == 7'd88 &&
-            rx_shift[87:80] == 8'hA5 &&
-            packet_checksum(rx_shift) == rx_shift[7:0]
-        ) begin
-            cmd <= rx_shift[79:72];
-            cmd_addr <= rx_shift[71:40];
-            cmd_data <= rx_shift[39:8];
-            req_toggle <= ~req_toggle;
-        end
-    end
-
     always @(posedge clk or posedge rst) begin
         if (rst) begin
-            req_sync1 <= 1'b0;
-            req_sync2 <= 1'b0;
-            req_seen <= 1'b0;
-            cmd_valid <= 1'b0;
-        end else begin
-            req_sync1 <= req_toggle;
-            req_sync2 <= req_sync1;
-            cmd_valid <= 1'b0;
+            sck_meta <= 0;
+            sck_sync <= 0;
+            sck_prev <= 0;
+            cs_meta <= 1;
+            cs_sync <= 1;
+            cs_prev <= 1;
+            mosi_meta <= 0;
+            mosi_sync <= 0;
 
-            if (req_sync2 != req_seen) begin
-                req_seen <= req_sync2;
-                cmd_valid <= 1'b1;
+            rx_shift <= 0;
+            bit_count <= 0;
+            tx_bit_count <= 0;
+
+            cmd <= 0;
+            cmd_addr <= 0;
+            cmd_data <= 0;
+            cmd_valid <= 0;
+        end else begin
+            sck_meta <= spi_sck;
+            sck_sync <= sck_meta;
+            sck_prev <= sck_sync;
+
+            cs_meta <= spi_cs_n;
+            cs_sync <= cs_meta;
+            cs_prev <= cs_sync;
+
+            mosi_meta <= spi_mosi;
+            mosi_sync <= mosi_meta;
+
+            cmd_valid <= 0;
+
+            if (cs_prev && !cs_sync) begin
+                rx_shift <= 0;
+                bit_count <= 0;
+                tx_bit_count <= 0;
+            end else if (!cs_sync) begin
+
+                if (!sck_prev && sck_sync) begin
+                    if (bit_count < 7'd88) begin
+                        rx_shift <= rx_next;
+                        bit_count <= bit_count + 1'b1;
+
+                        if (bit_count == 7'd87 &&
+                            rx_next[87:80] == 8'hA5 &&
+                            packet_checksum(rx_next) == rx_next[7:0]) begin
+
+                            cmd <= rx_next[79:72];
+                            cmd_addr <= rx_next[71:40];
+                            cmd_data <= rx_next[39:8];
+                            cmd_valid <= 1'b1;
+                        end
+                    end
+                end
+
+                if (sck_prev && !sck_sync) begin
+                    if (tx_bit_count < 6'd48)
+                        tx_bit_count <= tx_bit_count + 1'b1;
+                end
             end
         end
-    end
-
-    always @(posedge spi_sck or posedge spi_cs_n) begin
-        if (spi_cs_n || rst)
-            tx_bit_count <= 6'b0;
-        else if (tx_bit_count < 6'd63)
-            tx_bit_count <= tx_bit_count + 1'b1;
     end
 
 endmodule
