@@ -1,40 +1,61 @@
-# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
-# SPDX-License-Identifier: Apache-2.0
-
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles
-
-
+from cocotb.triggers import ClockCycles,Timer
+async def xfer(dut,c,a=0,d=0):
+    p=bytearray([0xA5,c])
+    p+=a.to_bytes(4,"big")
+    p+=d.to_bytes(4,"big")
+    s=0
+    for b in p:
+        s^=b
+    p.append(s)
+    dut.ui_in.value=4
+    await Timer(2,unit="us")
+    dut.ui_in.value=0
+    await Timer(1,unit="us")
+    r=0
+    for b in p:
+        for i in range(7,-1,-1):
+            m=(b>>i)&1
+            dut.ui_in.value=m<<1
+            await Timer(1,unit="us")
+            r=(r<<1)|(int(dut.uo_out.value)&1)
+            dut.ui_in.value=(m<<1)|1
+            await Timer(1,unit="us")
+            dut.ui_in.value=m<<1
+            await Timer(1,unit="us")
+    dut.ui_in.value=4
+    await ClockCycles(dut.clk,8)
+    return r
 @cocotb.test()
 async def test_project(dut):
-    dut._log.info("Start")
-
-    # Set the clock period to 10 us (100 KHz)
-    clock = Clock(dut.clk, 10, unit="us")
+    clock=Clock(dut.clk,100,unit="ns")
     cocotb.start_soon(clock.start())
-
-    # Reset
-    dut._log.info("Reset")
-    dut.ena.value = 1
-    dut.ui_in.value = 0
-    dut.uio_in.value = 0
-    dut.rst_n.value = 0
-    await ClockCycles(dut.clk, 10)
-    dut.rst_n.value = 1
-
-    dut._log.info("Test project behavior")
-
-    # Set the input values you want to test
-    dut.ui_in.value = 20
-    dut.uio_in.value = 30
-
-    # Wait for one clock cycle to see the output values
-    await ClockCycles(dut.clk, 1)
-
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 50
-
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    dut.ena.value=1
+    dut.ui_in.value=4
+    dut.uio_in.value=0
+    dut.rst_n.value=0
+    await ClockCycles(dut.clk,10)
+    dut.rst_n.value=1
+    await ClockCycles(dut.clk,10)
+    prog=[0x0A,0x01,0x03,0x02,0x12,0x13,0xFE,0xDF]
+    for i,b in enumerate(prog):
+        await xfer(dut,0x01,i,b)
+    await xfer(dut,0x10)
+    await ClockCycles(dut.clk,200)
+    await xfer(dut,0x11)
+    await ClockCycles(dut.clk,20)
+    await xfer(dut,0x20,3)
+    r=await xfer(dut,0x00)
+    dut._log.info("PC        = %08x", int(dut.dut.debug_pc.value))
+    dut._log.info("HALTED    = %d", int(dut.dut.debug_halted.value))
+    dut._log.info("FAULT     = %d", int(dut.dut.debug_fault.value))
+    dut._log.info("CPU STATE = %d", int(dut.dut.cpu.state.value))
+    dut._log.info("INSTR     = %04x", int(dut.dut.cpu.instr.value))
+    dut._log.info("REG ADDR  = %x", int(dut.dut.debug_reg_addr.value))
+    dut._log.info("REG DATA  = %08x", int(dut.dut.debug_reg_rdata.value))
+    dut._log.info("RSP DATA  = %08x", int(dut.dut.rsp_data.value))
+    dut._log.info("RSP STS   = %02x", int(dut.dut.rsp_sts.value))
+    assert((r>>80)&0xFF)==0x5A
+    assert((r>>72)&0xFF)==0
+    assert((r>>40)&0xFFFFFFFF)==13

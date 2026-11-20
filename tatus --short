@@ -1,0 +1,29 @@
+warning: in the working copy of 'info.yaml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitmodules', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitmodules', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of '.gitmodules', LF will be replaced by CRLF the next time Git touches it
+ .gitmodules                                        |   3 [32m+[m
+ src/alu.v                                          | 157 [31m-------[m
+ src/barrel_shifter.v                               |  61 [31m---[m
+ src/config.json                                    | 230 [32m+++++[m[31m-----[m
+ src/core.v                                         | 368 [31m----------------[m
+ src/debug_controller.v                             | 168 [31m--------[m
+ src/decoder.v                                      | 173 [31m--------[m
+ ...f180mcu_ocd_ip_sram__sram256x8m8wm1__blackbox.v |  13 [31m-[m
+ src/memory_controller.v                            | 214 [31m----------[m
+ src/pdn_cfg.tcl                                    |   2 [31m-[m
+ src/pdv_3v3_sram.tcl                               |  10 [31m-[m
+ src/project.v                                      |  54 [32m+[m[31m--[m
+ src/register_file.v                                |  38 [31m--[m
+ src/spi_debug_slave.v                              |  94 [31m-----[m
+ src/sram                                           |   1 [32m+[m
+ src/tt_um_godofstrategy_arm32.v                    | 249 [31m-----------[m
+ test/Makefile                                      |  41 [32m+[m[31m-[m
+ test/gf180_sram_sim.v                              |  35 [31m--[m
+ test/tb.v                                          |   2 [32m+[m[31m-[m
+ test/tb_alu.v                                      | 139 [31m------[m
+ test/tb_barrel_shifter.v                           |  94 [31m-----[m
+ test/tb_core.v                                     | 467 [31m---------------------[m
+ test/tb_decoder.v                                  | 188 [31m---------[m
+ test/tb_memory_controller.v                        | 208 [31m---------[m
+ 24 files changed, 164 insertions(+), 2845 deletions(-)
