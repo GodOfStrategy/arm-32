@@ -27,9 +27,7 @@ gf180mcu_ocd_ip_sram__sram256x8m8wm1 ram0(
     .WEN(sram_we?8'h00:8'hff),
     .A(sram_addr),
     .D(sram_wdata),
-    .Q(sram_rdata),
-    .VDD(vdd),
-    .VSS(vss)
+    .Q(sram_rdata)
 );
 
 wire cpu_req, cpu_instr, cpu_we, cpu_byte;
