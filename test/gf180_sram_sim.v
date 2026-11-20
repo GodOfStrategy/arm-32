@@ -1,4 +1,6 @@
 module gf180mcu_ocd_ip_sram__sram256x8m8wm1 (
+    inout VDD,
+    inout VSS,
     input wire CLK,
     input wire CEN,
     input wire GWEN,
