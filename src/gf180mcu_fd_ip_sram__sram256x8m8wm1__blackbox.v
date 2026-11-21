@@ -7,7 +7,9 @@ module gf180mcu_ocd_ip_sram__sram256x8m8wm1 (
     input [7:0] WEN,
     input [7:0] A,
     input [7:0] D,
-    output [7:0] Q
+    output [7:0] Q,
+    inout VDD,
+    inout VSS
 );
 endmodule
 `endif
