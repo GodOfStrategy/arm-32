@@ -21,7 +21,7 @@ ifneq ($(GATES),yes)
 # RTL simulation:
 SIM_BUILD = sim_build/rtl
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
-VERILOG_SOURCES += gf180_sram_sim.v
+
 
 else
 
@@ -39,7 +39,7 @@ VERILOG_SOURCES += $(PDK_ROOT)/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/verilo
 VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 
 endif
-
+VERILOG_SOURCES += gf180_sram_sim.v
 # Allow sharing configuration between design and testbench via `include`:
 COMPILE_ARGS += -I$(SRC_DIR)
 
