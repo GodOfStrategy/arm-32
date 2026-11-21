@@ -8,7 +8,7 @@ module gf180mcu_fd_ip_sram__sram256x8m8wm1(
     input[7:0]D,
     output[7:0]Q,
     inout VDD,
-    inout VSS,
-    
+    inout VSS
+  
 );
 endmodule
