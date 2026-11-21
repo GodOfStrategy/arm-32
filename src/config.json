@@ -32,39 +32,39 @@
   "CLOCK_PORT": "clk",
 
   "//": "Configuration docs: https://librelane.readthedocs.io/en/latest/reference/configuration.html",
-  "MACROS": {
-    "gf180mcu_fd_ip_sram__sram256x8m8wm1": {
-      "instances": {
-        "ram0": {
-          "location": [5, 5],
-          "orientation": "S"
-        }
-      },
-      "gds": [
-        "dir::sram/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.gds"
+  
+"MACROS": {
+  "gf180mcu_fd_ip_sram__sram256x8m8wm1": {
+    "instances": {
+      "ram0": {
+        "location": [5, 5],
+        "orientation": "S"
+      }
+    },
+    "gds": [
+      "dir::sram5v/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_fd_ip_sram__sram256x8m8wm1.gds"
+    ],
+    "lef": [
+      "dir::sram5v/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_fd_ip_sram__sram256x8m8wm1.lef"
+    ],
+    "vh": [
+      "dir::sram5v_blackbox.vh"
+    ],
+    "lib": {
+      "*_tt_025C_5v00": [
+        "dir::sram5v/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_fd_ip_sram__sram256x8m8wm1__tt_025C_5v00.lib"
       ],
-      "lef": [
-        "dir::sram/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.lef"
+      "*_ff_n40C_5v50": [
+        "dir::sram5v/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_fd_ip_sram__sram256x8m8wm1__ff_n40C_5v50.lib"
       ],
-      "vh": [
-        "dir::sram/cells/gf180mcu_fdd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__blackbox_pp.v"
-      ],
-      "lib": {
-        "*_tt_025C_3v30": [
-          "dir::sram/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__tt_025C_3v30.lib"
-        ],
-        "*_ff_n40C_3v60": [
-          "dir::sram/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ff_n40C_3v60.lib"
-        ],
-        "*_ss_125C_3v00": [
-          "dir::sram/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1__ss_125C_3v00.lib"
-        ]
-      },
-      "spice": [
-        "dir::sram/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_ocd_ip_sram__sram256x8m8wm1.spice"
-      ],
-      "sdf": {}
-    }
+      "*_ss_125C_4v50": [
+        "dir::sram5v/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_fd_ip_sram__sram256x8m8wm1__ss_125C_4v50.lib"
+      ]
+    },
+    "spice": [
+      "dir::sram5v/cells/gf180mcu_fd_ip_sram__sram256x8m8wm1/gf180mcu_fd_ip_sram__sram256x8m8wm1.cdl"
+    ],
+    "sdf": {}
   },
   "PDN_CFG": "dir::pdn_cfg.tcl",
   "PDN_VWIDTH": 6.0,
