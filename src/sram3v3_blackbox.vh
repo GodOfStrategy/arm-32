@@ -1,5 +1,5 @@
 (*blackbox*)
-module gf180mcu_fd_ip_sram__sram256x8m8wm1(
+module gf180mcu_ocd_ip_sram__sram256x8m8wm1(
     input CLK,
     input CEN,
     input GWEN,
