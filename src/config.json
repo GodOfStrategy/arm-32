@@ -70,7 +70,7 @@
 "PDN_MACRO_CONNECTIONS": [
   "ram0 VDD VSS VDD VSS"
 ],
-"PDN_CFG": "dir::pdn_cfg.tcl"
+"PDN_CFG": "dir::pdn_cfg.tcl",
   "PDN_VWIDTH": 6.0,
   "PDN_VPITCH": 28.92,
   "PDN_VOFFSET": 4.0,
