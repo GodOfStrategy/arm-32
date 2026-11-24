@@ -47,15 +47,6 @@ async def test_project(dut):
     await ClockCycles(dut.clk,20)
     await xfer(dut,0x20,3)
     r=await xfer(dut,0x00)
-    dut._log.info("PC        = %08x", int(dut.dut.debug_pc.value))
-    dut._log.info("HALTED    = %d", int(dut.dut.debug_halted.value))
-    dut._log.info("FAULT     = %d", int(dut.dut.debug_fault.value))
-    dut._log.info("CPU STATE = %d", int(dut.dut.cpu.state.value))
-    dut._log.info("INSTR     = %04x", int(dut.dut.cpu.instr.value))
-    dut._log.info("REG ADDR  = %x", int(dut.dut.debug_reg_addr.value))
-    dut._log.info("REG DATA  = %08x", int(dut.dut.debug_reg_rdata.value))
-    dut._log.info("RSP DATA  = %08x", int(dut.dut.rsp_data.value))
-    dut._log.info("RSP STS   = %02x", int(dut.dut.rsp_sts.value))
     assert((r>>80)&0xFF)==0x5A
     assert((r>>72)&0xFF)==0
     assert((r>>40)&0xFFFFFFFF)==13
