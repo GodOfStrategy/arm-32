@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="description" content="The story behind ARM32-Micro — designing and building a 32-bit processor for Tiny Tapeout.">
+  <title>ARM32-Micro — Building a 32-bit processor</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d18;
+      --surface: #101a2b;
+      --surface-2: #142238;
+      --text: #e8eef8;
+      --muted: #a8b6ca;
+      --accent: #76a9ff;
+      --accent-2: #62d6b1;
+      --line: rgba(178, 198, 225, .16);
+      --max: 1080px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 75% 0%, rgba(66, 111, 190, .18), transparent 34rem),
+        var(--bg);
+      color: var(--text);
+      font: 16px/1.75 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { width: min(var(--max), calc(100% - 40px)); margin: auto; }
+    header {
+      min-height: 82vh;
+      display: grid;
+      align-items: center;
+      padding: 90px 0 80px;
+      border-bottom: 1px solid var(--line);
+    }
+    nav {
+      position: absolute; top: 0; left: 0; right: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px max(20px, calc((100vw - var(--max))/2));
+      color: var(--muted); font-size: .9rem;
+    }
+    .brand { color: var(--text); font-weight: 750; letter-spacing: .04em; }
+    .nav-links { display: flex; gap: 24px; }
+    .eyebrow {
+      color: var(--accent-2); text-transform: uppercase; letter-spacing: .18em;
+      font-size: .76rem; font-weight: 750;
+    }
+    h1 {
+      max-width: 850px; margin: 18px 0;
+      font-size: clamp(3rem, 8vw, 6.4rem); line-height: .99;
+      letter-spacing: -.065em;
+    }
+    h1 span { color: var(--accent); }
+    .lead { max-width: 690px; color: var(--muted); font-size: clamp(1.05rem, 2vw, 1.28rem); }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    .pill {
+      border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px;
+      color: #c6d4e8; background: rgba(255,255,255,.025); font-size: .82rem;
+    }
+    main { padding: 70px 0 100px; }
+    .story { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 54px; }
+    aside { align-self: start; position: sticky; top: 28px; }
+    aside p { color: var(--muted); font-size: .78rem; text-transform: uppercase; letter-spacing: .14em; }
+    aside a { display: block; color: #aebdd2; padding: 7px 0; font-size: .9rem; }
+    article { min-width: 0; }
+    section { padding: 0 0 46px; margin: 0 0 46px; border-bottom: 1px solid var(--line); scroll-margin-top: 35px; }
+    h2 { font-size: clamp(1.8rem, 4vw, 2.55rem); line-height: 1.15; letter-spacing: -.04em; margin: 0 0 20px; }
+    p { margin: 0 0 18px; color: #c5d0df; }
+    .visual {
+      margin: 30px 0 12px; padding: 18px;
+      background: #f7f9fc; border-radius: 16px; overflow: hidden;
+      border: 1px solid rgba(255,255,255,.12);
+    }
+    .visual img { display: block; width: 100%; height: auto; }
+    .caption { color: #8fa1b8; font-size: .83rem; margin: 10px 2px 0; }
+    .note {
+      margin: 28px 0; padding: 20px 22px; border-left: 3px solid var(--accent-2);
+      background: linear-gradient(90deg, rgba(98,214,177,.09), transparent);
+      color: #d4e2ef; border-radius: 0 10px 10px 0;
+    }
+    .project-links {
+      display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px;
+    }
+    .project-links a {
+      display: inline-flex; padding: 11px 16px; border: 1px solid var(--line);
+      border-radius: 9px; color: var(--text); background: var(--surface);
+    }
+    footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: #8494aa; font-size: .88rem; }
+    @media (max-width: 760px) {
+      header { min-height: 76vh; padding-top: 110px; }
+      nav { padding-top: 16px; }
+      .nav-links { gap: 12px; font-size: .8rem; }
+      .story { grid-template-columns: 1fr; gap: 22px; }
+      aside { position: static; display: flex; flex-wrap: wrap; gap: 8px 18px; }
+      aside p { width: 100%; margin: 0; }
+      aside a { padding: 0; }
+      main { padding-top: 48px; }
+      .visual { padding: 9px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header id="top">
+    <nav aria-label="Main navigation">
+      <a class="brand" href="#top">ARM32-MICRO</a>
+      <div class="nav-links">
+        <a href="#story">The story</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#debugging">Debugging</a>
+        <a href="#next">What's next</a>
+      </div>
+    </nav>
+    <div class="wrap">
+      <div class="eyebrow">A processor, built from the ground up</div>
+      <h1>Building my own<br><span>32-bit processor.</span></h1>
+      <p class="lead">ARM32-Micro started as an idea: design a processor, make its parts work together, and see how far I could take it on a real silicon-design flow.</p>
+      <div class="hero-meta">
+        <span class="pill">Verilog</span>
+        <span class="pill">GF180MCU</span>
+        <span class="pill">Tiny Tapeout</span>
+        <span class="pill">Work in progress</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="story" class="wrap">
+    <div class="story">
+      <aside aria-label="Page contents">
+        <p>On this page</p>
+        <a href="#idea">The idea</a>
+        <a href="#architecture">Putting it together</a>
+        <a href="#memory">Memory and SPI</a>
+        <a href="#debugging">Making it work</a>
+        <a href="#physical">From RTL to layout</a>
+        <a href="#next">Still in progress</a>
+      </aside>
+
+      <article>
+        <section id="idea">
+          <div class="eyebrow">01 / The starting point</div>
+          <h2>It began with a simple question.</h2>
+          <p>What would it take to build a processor of my own? Not just write software for one, but describe the hardware itself and make the different parts work together.</p>
+          <p>I started by splitting the processor into smaller pieces. The ALU would handle arithmetic and logic. The register file would hold the values the processor was working with. The decoder would interpret instructions, and the barrel shifter would take care of shifting and rotating data.</p>
+          <p>Each block was manageable on its own. The difficult part was getting them to agree on timing, control signals and data flow once they were connected.</p>
+        </section>
+
+        <section id="architecture">
+          <div class="eyebrow">02 / The processor</div>
+          <h2>Putting the pieces together.</h2>
+          <p>ARM32-Micro uses a 32-bit datapath and a set of 16 registers. The processor fetches and decodes instructions, executes operations through the ALU and shifter, and uses a memory controller when an instruction needs to access memory.</p>
+          <p>I had to work through the control logic carefully. A processor cannot simply fetch, execute and access memory whenever it wants. Those actions need to happen in the right order, so I used a finite-state machine to coordinate the stages.</p>
+          <figure class="visual">
+            <img src="docs/arm32-functional-block-diagram.svg" alt="ARM32-Micro functional block diagram showing the processor core, memory controller, SRAM and SPI debug interface">
+          </figure>
+          <figcaption class="caption">The main blocks and how they connect inside ARM32-Micro.</figcaption>
+        </section>
+
+        <section id="memory">
+          <div class="eyebrow">03 / Memory and control</div>
+          <h2>Getting data in and out.</h2>
+          <p>A processor needs somewhere to keep instructions and data. For this design, I worked on integrating an SRAM macro into the Tiny Tapeout project. The memory is divided into regions for data and program storage, so the processor can fetch instructions and read or write data.</p>
+          <p>I also wanted a way to interact with the chip from outside. That led to an SPI debug interface. Through it, a host can load a program, start or halt execution, step through instructions, and inspect or modify register values.</p>
+          <p>Getting the SPI interface and the processor to share access to memory without interfering with each other was another piece of the design that needed careful control.</p>
+          <figure class="visual">
+            <img src="docs/arm32-debug-flow.svg" alt="ARM32-Micro SPI programming and debugging flow">
+          </figure>
+          <figcaption class="caption">The path from an external host to memory and the processor during programming and debugging.</figcaption>
+        </section>
+
+        <section id="debugging">
+          <div class="eyebrow">04 / The difficult part</div>
+          <h2>Most of the work was debugging.</h2>
+          <p>Writing the modules was only one part of the project. A signal could be correct in one module and still cause a problem when it reached another. I spent time tracing state transitions, checking instruction execution and making sure the debug interface behaved as expected.</p>
+          <p>Simulation helped catch logic errors before moving further. I also had to deal with practical toolchain problems: simulator setup, Python environments, build scripts and differences between Windows and Linux. Moving parts of the workflow into WSL made the environment more consistent, but it took some effort to get everything running.</p>
+          <div class="note">A successful compile does not automatically mean the processor is correct. Each stage still needs to be tested, and the SRAM simulation model must be included properly for the full testbench to build.</div>
+        </section>
+
+        <section id="physical">
+          <div class="eyebrow">05 / Physical design</div>
+          <h2>Taking the design beyond Verilog.</h2>
+          <p>The next challenge was the physical-design flow. RTL describes what the circuit should do, but a chip also needs its cells placed, connected and checked against the manufacturing rules of the process.</p>
+          <p>That brought a different set of problems: SRAM macro integration, floorplanning, power connections, placement, routing, timing and design-rule checks. Some issues came from the design itself; others came from configuration or from how the tools expected files and macros to be arranged.</p>
+          <p>Working through those problems made it clear that building a processor is not just a logic-design exercise. The physical implementation has its own constraints, and the design has to satisfy both sides.</p>
+        </section>
+
+        <section id="next">
+          <div class="eyebrow">06 / What's next</div>
+          <h2>It is still a work in progress.</h2>
+          <p>ARM32-Micro has come a long way from a collection of separate Verilog modules, but I am not treating a passing stage of the flow as the finish line. Simulation, SRAM integration and physical-design checks all need to agree before the design is ready for submission.</p>
+          <p>There are still things to verify and improve. That is part of the point of the project: learning how the whole process works, from an instruction moving through a processor to the layout that could eventually become silicon.</p>
+          <p>And I'm not done yet.</p>
+          <div class="project-links">
+            <a href="https://github.com/GodOfStrategy/arm-32" target="_blank" rel="noopener noreferrer">View the GitHub repository ↗</a>
+            <a href="https://gds-explorer.tinytapeout.com/viewer?file=https://godofstrategy.github.io/arm-32/tinytapeout.oas&amp;pdk=gf180mcuD" target="_blank" rel="noopener noreferrer">Open the GDS viewer ↗</a>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">ARM32-Micro · An ongoing hardware design project</div>
+  </footer>
+</body>
+</html>
