@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430">
+<defs>
+ <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L9 3 L0 6Z" fill="#52647a"/></marker>
+ <filter id="s" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#132238" flood-opacity=".12"/></filter>
+ <style>.bg{fill:#f5f7fb}.b{stroke-width:2;filter:url(#s)}.t{font:600 20px Arial,sans-serif;fill:#172b4d}.s{font:15px Arial,sans-serif;fill:#52647a}.h{font:700 28px Arial,sans-serif;fill:#172b4d}.l{fill:none;stroke:#52647a;stroke-width:3;marker-end:url(#a)}</style>
+</defs>
+<rect class="bg" width="1200" height="430" rx="22"/>
+<text class="h" x="600" y="48" text-anchor="middle">Program Loading &amp; Debugging Flow</text>
+<text class="s" x="600" y="75" text-anchor="middle">An external controller communicates with ARM32-Micro over SPI</text>
+<rect class="b" x="35" y="150" width="190" height="115" rx="14" fill="#e8f1ff" stroke="#4779bd"/>
+<text class="t" x="130" y="193" text-anchor="middle">Host</text><text class="s" x="130" y="222" text-anchor="middle">PC / programmer</text>
+<rect class="b" x="285" y="150" width="190" height="115" rx="14" fill="#f2eaff" stroke="#8a65bb"/>
+<text class="t" x="380" y="193" text-anchor="middle">SPI Slave</text><text class="s" x="380" y="222" text-anchor="middle">Packet + checksum</text>
+<rect class="b" x="535" y="150" width="210" height="115" rx="14" fill="#f2eaff" stroke="#8a65bb"/>
+<text class="t" x="640" y="190" text-anchor="middle">Debug &amp; Control</text><text class="s" x="640" y="220" text-anchor="middle">Decode command</text><text class="s" x="640" y="242" text-anchor="middle">Run / halt / step / registers</text>
+<rect class="b" x="805" y="95" width="175" height="100" rx="14" fill="#fff2df" stroke="#d28a32"/>
+<text class="t" x="892" y="135" text-anchor="middle">Memory</text><text class="t" x="892" y="160" text-anchor="middle">Controller</text>
+<rect class="b" x="1020" y="95" width="150" height="100" rx="14" fill="#fff2df" stroke="#d28a32"/>
+<text class="t" x="1095" y="135" text-anchor="middle">SRAM</text><text class="s" x="1095" y="161" text-anchor="middle">256 bytes</text>
+<rect class="b" x="805" y="285" width="365" height="85" rx="14" fill="#e9f7f0" stroke="#39936a"/>
+<text class="t" x="987" y="320" text-anchor="middle">ARM32-Micro CPU Core</text><text class="s" x="987" y="347" text-anchor="middle">Execute program · expose status and registers</text>
+<path class="l" d="M225 207 H285"/><path class="l" d="M475 207 H535"/>
+<path class="l" d="M745 180 H805"/><path class="l" d="M980 145 H1020"/>
+<path class="l" d="M892 195 V285"/><path class="l" d="M805 327 H745 V265"/>
+<text class="s" x="600" y="405" text-anchor="middle">Responses travel back through the SPI interface to the host.</text>
+</svg>
