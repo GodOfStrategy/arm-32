@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="690" viewBox="0 0 1200 690">
+<defs>
+ <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0 0 L9 3 L0 6Z" fill="#52647a"/></marker>
+ <filter id="s" x="-10%" y="-10%" width="120%" height="120%"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#132238" flood-opacity=".12"/></filter>
+ <style>
+ .bg{fill:#f5f7fb}.panel{fill:#fff;stroke:#cbd5e1;stroke-width:2;filter:url(#s)}
+ .core{fill:#e8f1ff;stroke:#4779bd;stroke-width:2}.exec{fill:#e9f7f0;stroke:#39936a;stroke-width:2}
+ .mem{fill:#fff2df;stroke:#d28a32;stroke-width:2}.debug{fill:#f2eaff;stroke:#8a65bb;stroke-width:2}
+ .t{font:600 21px Arial,sans-serif;fill:#172b4d}.sub{font:15px Arial,sans-serif;fill:#52647a}
+ .head{font:700 29px Arial,sans-serif;fill:#172b4d}.line{fill:none;stroke:#52647a;stroke-width:3;marker-end:url(#a)}
+ .dash{fill:none;stroke:#8a65bb;stroke-width:2.5;stroke-dasharray:8 7;marker-end:url(#a)}
+ </style>
+</defs>
+<rect class="bg" width="1200" height="690" rx="22"/>
+<text class="head" x="600" y="48" text-anchor="middle">ARM32-Micro — Functional Block Diagram</text>
+<text class="sub" x="600" y="76" text-anchor="middle">Instruction flow, execution datapath and on-chip memory interface</text>
+<!-- core boundary -->
+<rect x="42" y="112" width="820" height="520" rx="20" fill="#ffffff" stroke="#9fb4ce" stroke-width="2" stroke-dasharray="9 7"/>
+<text class="sub" x="66" y="143">PROCESSOR CORE</text>
+<rect class="core" x="85" y="185" width="205" height="86" rx="13"/>
+<text class="t" x="187" y="220" text-anchor="middle">Instruction</text><text class="t" x="187" y="246" text-anchor="middle">Decoder</text>
+<rect class="core" x="85" y="350" width="205" height="100" rx="13"/>
+<text class="t" x="187" y="390" text-anchor="middle">Register File</text><text class="sub" x="187" y="419" text-anchor="middle">16 × 32-bit registers</text>
+<rect class="exec" x="390" y="185" width="190" height="86" rx="13"/>
+<text class="t" x="485" y="220" text-anchor="middle">ALU</text><text class="sub" x="485" y="246" text-anchor="middle">Arithmetic / logic</text>
+<rect class="exec" x="390" y="350" width="190" height="100" rx="13"/>
+<text class="t" x="485" y="390" text-anchor="middle">Barrel Shifter</text><text class="sub" x="485" y="419" text-anchor="middle">LSL · LSR · ASR · ROR</text>
+<rect class="core" x="650" y="270" width="170" height="95" rx="13"/>
+<text class="t" x="735" y="307" text-anchor="middle">Control FSM</text><text class="sub" x="735" y="335" text-anchor="middle">Fetch · Execute · Wait</text>
+<rect class="mem" x="930" y="220" width="220" height="115" rx="13"/>
+<text class="t" x="1040" y="263" text-anchor="middle">Memory</text><text class="t" x="1040" y="289" text-anchor="middle">Controller</text><text class="sub" x="1040" y="315" text-anchor="middle">Byte / word transactions</text>
+<rect class="mem" x="930" y="420" width="220" height="105" rx="13"/>
+<text class="t" x="1040" y="460" text-anchor="middle">On-chip SRAM</text><text class="sub" x="1040" y="490" text-anchor="middle">256 × 8-bit · 256 bytes</text>
+<!-- arrows -->
+<path class="line" d="M187 350 V271"/>
+<path class="line" d="M290 226 H390"/>
+<path class="line" d="M290 400 H390"/>
+<path class="line" d="M485 271 V350"/>
+<path class="line" d="M580 228 H650 V290"/>
+<path class="line" d="M580 400 H650 V345"/>
+<path class="line" d="M820 315 H930"/>
+<path class="line" d="M1040 335 V420"/>
+<path class="line" d="M930 470 H875 V565 H735 V365"/>
+<text class="sub" x="600" y="585" text-anchor="middle">Results return to the register file; the control unit sequences each operation.</text>
+<!-- spi/debug -->
+<rect class="debug" x="75" y="500" width="235" height="82" rx="13"/>
+<text class="t" x="192" y="533" text-anchor="middle">SPI Debug Interface</text><text class="sub" x="192" y="558" text-anchor="middle">Program · Run · Halt · Step</text>
+<path class="dash" d="M192 500 V450"/>
+<path class="dash" d="M310 541 H735 V365"/>
+<text class="sub" x="460" y="526" text-anchor="middle">Debug register access and control</text>
+</svg>
