@@ -65,6 +65,12 @@ The instruction format is designed to provide a compact encoding while retaining
 
 ### Processor organisation
 
+The diagram below shows how instructions move through the processor and how the execution units, memory system and debug interface connect.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/GodOfStrategy/arm-32/main/docs/arm32-functional-block-diagram.svg" alt="ARM32-Micro functional block diagram" width="100%" />
+</p>
+
 The processor consists of the following primary components:
 
 1. **Instruction Fetch:** Retrieves a 16-bit instruction from program memory.
@@ -232,6 +238,12 @@ The controller uses a finite state machine to coordinate SRAM operations and pro
 This abstraction allows the CPU core to communicate with memory without directly managing individual SRAM transactions.
 
 ## SPI Debugging and Programming
+
+The programming and debugging path is shown below. An external host sends commands over SPI; the control logic routes program-loading requests to memory and execution-control requests to the CPU.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/GodOfStrategy/arm-32/main/docs/arm32-debug-flow.svg" alt="ARM32-Micro programming and debugging flow" width="100%" />
+</p>
 
 ARM-32 Micro incorporates an SPI-based debugging interface through a dedicated SPI slave module.
 
